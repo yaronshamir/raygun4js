@@ -1,4 +1,4 @@
-/*! Raygun4js - v1.8.4 - 2014-05-22
+/*! Raygun4js - v1.8.4 - 2014-06-09
 * https://github.com/MindscapeHQ/raygun4js
 * Copyright (c) 2014 MindscapeHQ; Licensed MIT */
 ;(function(window, undefined) {
@@ -1404,12 +1404,22 @@ window.TraceKit = TraceKit;
     }
   }
 
-  function sendSavedErrors() {
-    for (var key in localStorage) {
-      if (key.substring(0, 9) === 'raygunjs=') {
-        sendToRaygun(JSON.parse(localStorage[key]));
+  function localStorageAvailable(){
+    try {
+      return ('localStorage' in window) && window['localStorage'] !== null;
+    } catch(e){
+      return false;
+    }
+  }
 
-        localStorage.removeItem(key);
+  function sendSavedErrors() {
+    if (localStorageAvailable() && localStorage.length > 0) {
+        for (var key in localStorage) {
+        if (key.substring(0, 9) === 'raygunjs=') {
+          sendToRaygun(JSON.parse(localStorage[key]));
+
+          localStorage.removeItem(key);
+        }
       }
     }
   }
@@ -1491,7 +1501,7 @@ window.TraceKit = TraceKit;
         },
         'Client': {
           'Name': 'raygun-js',
-          'Version': '1.8.4'
+          'Version': '1.8.5'
         },
         'UserCustomData': finalCustomData,
         'Tags': options.tags,

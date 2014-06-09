@@ -227,12 +227,22 @@
     }
   }
 
-  function sendSavedErrors() {
-    for (var key in localStorage) {
-      if (key.substring(0, 9) === 'raygunjs=') {
-        sendToRaygun(JSON.parse(localStorage[key]));
+  function localStorageAvailable(){
+    try {
+      return ('localStorage' in window) && window['localStorage'] !== null;
+    } catch(e){
+      return false;
+    }
+  }
 
-        localStorage.removeItem(key);
+  function sendSavedErrors() {
+    if (localStorageAvailable() && localStorage.length > 0) {
+        for (var key in localStorage) {
+        if (key.substring(0, 9) === 'raygunjs=') {
+          sendToRaygun(JSON.parse(localStorage[key]));
+
+          localStorage.removeItem(key);
+        }
       }
     }
   }
@@ -314,7 +324,7 @@
         },
         'Client': {
           'Name': 'raygun-js',
-          'Version': '1.8.4'
+          'Version': '1.8.5'
         },
         'UserCustomData': finalCustomData,
         'Tags': options.tags,
