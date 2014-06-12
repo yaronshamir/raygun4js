@@ -1,4 +1,4 @@
-/*! Raygun4js - v1.8.4 - 2014-05-22
+/*! Raygun4js - v1.8.4 - 2014-06-13
 * https://github.com/MindscapeHQ/raygun4js
 * Copyright (c) 2014 MindscapeHQ; Licensed MIT */
 ;(function(window, undefined) {
@@ -46,7 +46,12 @@ TraceKit.noConflict = function noConflict() {
 TraceKit.wrap = function traceKitWrapper(func) {
     function wrapped() {
         try {
-            return func.apply(this, arguments);
+            if (typeof func === 'function') {
+              return func.apply(this, arguments);
+            } else {
+              throw Error('Not a function: ' + func);
+            }
+
         } catch (e) {
             TraceKit.report(e);
             throw e;
@@ -1491,7 +1496,7 @@ window.TraceKit = TraceKit;
         },
         'Client': {
           'Name': 'raygun-js',
-          'Version': '1.8.4'
+          'Version': '1.8.5'
         },
         'UserCustomData': finalCustomData,
         'Tags': options.tags,

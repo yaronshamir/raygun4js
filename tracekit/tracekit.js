@@ -48,7 +48,12 @@ TraceKit.noConflict = function noConflict() {
 TraceKit.wrap = function traceKitWrapper(func) {
     function wrapped() {
         try {
-            return func.apply(this, arguments);
+            if (typeof func === 'function') {
+              return func.apply(this, arguments);
+            } else {
+              throw Error('Not a function: ' + func);
+            }
+
         } catch (e) {
             TraceKit.report(e);
             throw e;
