@@ -1135,13 +1135,16 @@ window.TraceKit = TraceKit;
   $.event.add = function traceKitEventAdd(elem, types, handler, data, selector) {
     var _handler;
 
-    if (handler.handler) {
-      _handler = handler.handler;
-      handler.handler = TraceKit.wrap(handler.handler);
-    } else {
-      _handler = handler;
-      handler = TraceKit.wrap(handler);
+    if (handler) {
+      if (handler.handler) {
+        _handler = handler.handler;
+        handler.handler = TraceKit.wrap(handler.handler);
+      } else {
+        _handler = handler;
+        handler = TraceKit.wrap(handler);
+      }
     }
+
 
     // If the handler we are attaching doesn’t have the same guid as
     // the original, it will never be removed when someone tries to
